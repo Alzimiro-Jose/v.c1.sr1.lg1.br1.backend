@@ -30,13 +30,12 @@ app.add_middleware(
 
 # --- CONEXÃO SUPABASE (ATUALIZADA PARA TRANSACTION POOLER) ---
 # 🔹 AJUSTE: Utilizando a porta 6543 para compatibilidade total com Vercel (IPv6)
-DATABASE_URL = "postgresql://postgres:k2ukutacP3O4KDPX@aws-0-sa-east-1.pooler.supabase.com:6543/postgres"
+DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:SUA_NOVA_SENHA_AQUI@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
 
-# ✅ Adicionados parâmetros de estabilidade para conexões em nuvem
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,  # Testa a conexão antes de usar (evita erros 500 por timeout)
-    pool_recycle=300     # Reinicia conexões paradas a cada 5 min
+    pool_pre_ping=True,
+    pool_recycle=300
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
