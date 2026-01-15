@@ -32,8 +32,8 @@ app.add_middleware(
 
 # 🔹 A URL utiliza o formato 'usuario.id_do_projeto' exigido pelo Pooler (porta 6543)
 # 🔹 O parâmetro ?sslmode=require garante a segurança exigida para conexões em nuvem
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
-
+# Teste com a porta padrão e usuário simples
+DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:5432/postgres?sslmode=require"
 # 🚀 Configuração do Engine com parâmetros de resiliência
 engine = create_engine(
     DATABASE_URL,
