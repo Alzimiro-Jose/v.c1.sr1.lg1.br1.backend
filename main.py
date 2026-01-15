@@ -1,17 +1,15 @@
 # // C:\Users\User\Desktop\Modelos com Pipelines\v.w1.c1.sr1.lg1.br1\backend\main.py
 
-# 📌 Importação de Bibliotecas
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, String, TIMESTAMP, func
 from sqlalchemy.orm import sessionmaker, Session, Mapped, mapped_column, declarative_base
 from pydantic import BaseModel, EmailStr, StringConstraints, model_validator
 import bcrypt
-import re
 import jwt
 import os
 from datetime import datetime, timedelta, timezone
-from typing import Annotated, Optional, List
+from typing import Annotated
 
 # --- CONFIGURAÇÕES DE SEGURANÇA ---
 SECRET_KEY = "Bento1801?"
@@ -21,20 +19,18 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 1200
 # --- CONFIGURAÇÃO DA API ---
 app = FastAPI()
 
-# ✅ AJUSTE CORS: Permitir o seu domínio da Vercel e Localhost
+# ✅ AJUSTE CORS DEFINITIVO: Somente o domínio oficial da Vercel
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",
-        "https://v-w1-c1-sr1-lg1-br1.vercel.app" # Substitua pela sua URL real do frontend
+        "https://v-w1-c1-sr1-lg1-br1.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --- CONEXÃO SUPABASE ---
-# ✅ AJUSTE: URL do Supabase (A mesma do seu database.py)
+# --- CONEXÃO SUPABASE (PRODUÇÃO) ---
 DATABASE_URL = "postgresql://postgres:k2ukutacP3O4KDPX@db.gbjpgklizrfocjecuolh.supabase.co:5432/postgres"
 
 engine = create_engine(DATABASE_URL)
@@ -84,7 +80,7 @@ def criar_token_acesso(dados: dict):
     dados.update({"exp": expira})
     return jwt.encode(dados, SECRET_KEY, algorithm=ALGORITHM)
 
-def verificar_token(token: str = Depends(jwt.decode)): # Simplificado para o exemplo
+def verificar_token(token: str = Depends(lambda x: x)): 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
@@ -117,9 +113,3 @@ def login(login: LoginSchema, db: Session = Depends(get_db)):
     
     token = criar_token_acesso({"sub": usuario.email, "id": usuario.id, "nome": usuario.nome})
     return {"token": token}
-
-# ✅ AJUSTE PARA VERCEL: O Uvicorn não é chamado manualmente na Vercel
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
