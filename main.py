@@ -32,16 +32,15 @@ app.add_middleware(
 
 
 
-# 🔹 URL validada pelo seu teste de terminal
-DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
+# 🔹 Usamos o host do POOLER (aws-0-sa-east-1.pooler.supabase.com)
+# 🔹 Adicionamos ?prepared_statements=false (Isso é OBRIGATÓRIO para funcionar na Vercel)
+DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&prepared_statements=false"
 
-# 🚀 Configuração otimizada para Vercel (Serverless)
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True, # Testa a conexão antes de usar (evita erro 500)
-    pool_size=1,        # Essencial para Vercel: mantém apenas 1 conexão por instância
-    max_overflow=0,     # Proíbe criar conexões extras que travam o IPv6
-    pool_recycle=300    # Renova a conexão a cada 5 minutos
+    pool_pre_ping=True,
+    pool_size=1,            # Mantenha apenas 1 para não travar o socket da Vercel
+    max_overflow=0
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
