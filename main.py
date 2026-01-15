@@ -32,17 +32,15 @@ app.add_middleware(
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
 
-# 🔹 URL EXATA que funcionou no seu terminal
-DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
+# 🔹 FORMATO RADICAL: Trocamos o nome do host pelo IP do Pooler do Supabase no Brasil
+# 🔹 Isso força a Vercel a usar IPv4 e ignora o erro de "address"
+DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@15.229.150.166:6543/postgres?sslmode=require"
 
-# 🚀 AJUSTE DE MESTRE: Usando NullPool
-# Isso força a Vercel a abrir e fechar a conexão em cada clique, 
-# exatamente como o comando do terminal fez. Resolve o erro de "address".
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool, 
+    poolclass=NullPool, # Garante que cada requisição seja uma conexão nova e limpa
     connect_args={
-        "connect_timeout": 10 
+        "connect_timeout": 15
     }
 )
 
