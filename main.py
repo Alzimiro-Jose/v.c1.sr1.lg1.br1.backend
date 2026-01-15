@@ -19,20 +19,26 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 1200
 # --- CONFIGURAÇÃO DA API ---
 app = FastAPI()
 
-# ✅ AJUSTE CORS DEFINITIVO: Somente o domínio oficial da Vercel
-# No main.py, mude o allow_origins para aceitar TUDO temporariamente:
+# ✅ CORS: Mantido aberto para validar a comunicação inicial
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Aceita qualquer origem para teste
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --- CONEXÃO SUPABASE (PRODUÇÃO) ---
-DATABASE_URL = "postgresql://postgres:k2ukutacP3O4KDPX@db.gbjpgklizrfocjecuolh.supabase.co:5432/postgres"
+# --- CONEXÃO SUPABASE (ATUALIZADA PARA TRANSACTION POOLER) ---
+# 🔹 AJUSTE: Utilizando a porta 6543 para compatibilidade total com Vercel (IPv6)
+DATABASE_URL = "postgresql://postgres:k2ukutacP3O4KDPX@aws-0-sa-east-1.pooler.supabase.com:6543/postgres"
 
-engine = create_engine(DATABASE_URL)
+# ✅ Adicionados parâmetros de estabilidade para conexões em nuvem
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,  # Testa a conexão antes de usar (evita erros 500 por timeout)
+    pool_recycle=300     # Reinicia conexões paradas a cada 5 min
+)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -78,13 +84,6 @@ def criar_token_acesso(dados: dict):
     expira = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     dados.update({"exp": expira})
     return jwt.encode(dados, SECRET_KEY, algorithm=ALGORITHM)
-
-def verificar_token(token: str = Depends(lambda x: x)): 
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
-    except:
-        raise HTTPException(status_code=401, detail="Token inválido")
 
 # --- ROTAS ---
 @app.post("/cadastrar")
