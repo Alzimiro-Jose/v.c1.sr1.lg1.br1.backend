@@ -10,6 +10,7 @@ import jwt
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
+from sqlalchemy.pool import NullPool # Importação necessária
 
 # --- CONFIGURAÇÕES DE SEGURANÇA ---
 SECRET_KEY = "Bento1801?"
@@ -31,20 +32,17 @@ app.add_middleware(
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
 
-
-
-# 🔹 URL QUE FUNCIONOU NO SEU TERMINAL (Sem o parâmetro que deu erro)
+# 🔹 URL EXATA que funcionou no seu terminal
 DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
 
-# 🚀 Configuração Master para Vercel + Supabase Pooler
+# 🚀 AJUSTE DE MESTRE: Usando NullPool
+# Isso força a Vercel a abrir e fechar a conexão em cada clique, 
+# exatamente como o comando do terminal fez. Resolve o erro de "address".
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,
-    pool_size=1,
-    max_overflow=0,
-    # O segredo para o modo Transaction do Pooler no SQLAlchemy:
-    execution_options={
-        "isolation_level": "AUTOCOMMIT"
+    poolclass=NullPool, 
+    connect_args={
+        "connect_timeout": 10
     }
 )
 
