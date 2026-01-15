@@ -30,16 +30,16 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# // C:\Users\User\Desktop\Modelos com Pipelines\v.w1.c1.sr1.lg1.br1\backend\main.py
 
-# 🔹 FORMATO 2: Usuário simples + Host específico do projeto
-# Substituímos o host genérico pelo host que já contém o seu ID
+# 🔹 Usamos o Host que validamos no terminal, mas com a porta 6543
+# 🔹 Adicionamos ?sslmode=require para segurança
 DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
+    # 🚀 Parâmetros vitais para Vercel:
     pool_pre_ping=True,
-    pool_size=3,
+    pool_size=1,           # Na Vercel (Serverless), menos é mais para evitar erros de endereço
     max_overflow=0,
     pool_recycle=300
 )
