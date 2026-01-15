@@ -30,19 +30,22 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# 🔹 A URL utiliza o formato 'usuario.id_do_projeto' exigido pelo Pooler (porta 6543)
-# 🔹 O parâmetro ?sslmode=require garante a segurança exigida para conexões em nuvem
-# Teste com a porta padrão e usuário simples
-DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:5432/postgres?sslmode=require"
-# 🚀 Configuração do Engine com parâmetros de resiliência
+# // C:\Users\User\Desktop\Modelos com Pipelines\v.w1.c1.sr1.lg1.br1\backend\main.py
+
+# 🔹 URL Ajustada com o sufixo do projeto no usuário e parâmetros de SSL
+DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,  # Testa se a conexão está ativa antes de cada operação (evita erro 500)
-    pool_size=5,         # Mantém um número fixo de conexões prontas para uso
-    max_overflow=10,     # Permite criar conexões extras se houver pico de acessos
-    pool_recycle=300,    # Reinicia conexões a cada 5 minutos para evitar instabilidade
-    connect_args={"connect_timeout": 10} # Define o tempo máximo de espera pelo banco
+    pool_pre_ping=True,      # Fundamental para conexões em nuvem
+    pool_size=3,             # Reduzido para evitar estourar o limite do plano Nano
+    max_overflow=0,          # Mantém o controle rígido de conexões
+    connect_args={
+        "connect_timeout": 10,
+        "application_name": "v_c1_backend"
+    }
 )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
