@@ -115,3 +115,16 @@ def login(login: LoginSchema, db: Session = Depends(get_db)):
 @app.get("/teste-simples")
 def teste():
     return {"status": "A API está funcionando e o CORS permite isso!"}
+
+
+
+
+@app.get("/debug-db")
+def debug_db():
+    try:
+        from sqlalchemy import text
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+            return {"status": "Sucesso!", "detalhe": "O Backend conseguiu falar com o Supabase!"}
+    except Exception as e:
+        return {"status": "Erro de Conexão", "mensagem_real": str(e)}
