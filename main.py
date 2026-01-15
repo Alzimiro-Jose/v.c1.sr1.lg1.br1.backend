@@ -32,15 +32,20 @@ app.add_middleware(
 
 
 
-# 🔹 Usamos o host do POOLER (aws-0-sa-east-1.pooler.supabase.com)
-# 🔹 Adicionamos ?prepared_statements=false (Isso é OBRIGATÓRIO para funcionar na Vercel)
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&prepared_statements=false"
 
+# 🔹 URL QUE FUNCIONOU NO SEU TERMINAL (Sem o parâmetro que deu erro)
+DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
+
+# 🚀 Configuração Master para Vercel + Supabase Pooler
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
-    pool_size=1,            # Mantenha apenas 1 para não travar o socket da Vercel
-    max_overflow=0
+    pool_size=1,
+    max_overflow=0,
+    # O segredo para o modo Transaction do Pooler no SQLAlchemy:
+    execution_options={
+        "isolation_level": "AUTOCOMMIT"
+    }
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
