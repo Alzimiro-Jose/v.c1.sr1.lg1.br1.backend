@@ -42,9 +42,10 @@ engine = create_engine(
     DATABASE_URL,
     poolclass=NullPool, 
     connect_args={
-        "connect_timeout": 10
+        "connect_timeout": 10 
     }
 )
+
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
