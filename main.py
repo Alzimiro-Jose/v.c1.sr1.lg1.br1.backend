@@ -31,15 +31,15 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# 🔹 O segredo: postgres + . + gbjpgklizrfocjecuolh no USUÁRIO
-# 🔹 Isso resolve o "Tenant not found" mesmo que a Vercel mude a rota
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
+# 🔹 FORMATO HÍBRIDO: Host do Pooler AWS + Usuário que funcionou no terminal
+# 🔹 Adicionamos ?sslmode=require para a Vercel aceitar a saída
+DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool, # Comportamento idêntico ao comando do terminal
+    poolclass=NullPool, # Força a Vercel a agir como o seu terminal (abre e fecha na hora)
     connect_args={
-        "connect_timeout": 15
+        "connect_timeout": 20
     }
 )
 
