@@ -31,17 +31,17 @@ app.add_middleware(
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
 
-# 🔹 Usamos o Host que validamos no terminal, mas com a porta 6543
-# 🔹 Adicionamos ?sslmode=require para segurança
+
+# 🔹 URL validada pelo seu teste de terminal
 DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
 
+# 🚀 Configuração otimizada para Vercel (Serverless)
 engine = create_engine(
     DATABASE_URL,
-    # 🚀 Parâmetros vitais para Vercel:
-    pool_pre_ping=True,
-    pool_size=1,           # Na Vercel (Serverless), menos é mais para evitar erros de endereço
-    max_overflow=0,
-    pool_recycle=300
+    pool_pre_ping=True, # Testa a conexão antes de usar (evita erro 500)
+    pool_size=1,        # Essencial para Vercel: mantém apenas 1 conexão por instância
+    max_overflow=0,     # Proíbe criar conexões extras que travam o IPv6
+    pool_recycle=300    # Renova a conexão a cada 5 minutos
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
