@@ -32,18 +32,16 @@ app.add_middleware(
 
 # // C:\Users\User\Desktop\Modelos com Pipelines\v.w1.c1.sr1.lg1.br1\backend\main.py
 
-# 🔹 URL Ajustada com o sufixo do projeto no usuário e parâmetros de SSL
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+# 🔹 FORMATO 2: Usuário simples + Host específico do projeto
+# Substituímos o host genérico pelo host que já contém o seu ID
+DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,      # Fundamental para conexões em nuvem
-    pool_size=3,             # Reduzido para evitar estourar o limite do plano Nano
-    max_overflow=0,          # Mantém o controle rígido de conexões
-    connect_args={
-        "connect_timeout": 10,
-        "application_name": "v_c1_backend"
-    }
+    pool_pre_ping=True,
+    pool_size=3,
+    max_overflow=0,
+    pool_recycle=300
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
