@@ -110,3 +110,8 @@ def login(login: LoginSchema, db: Session = Depends(get_db)):
     
     token = criar_token_acesso({"sub": usuario.email, "id": usuario.id, "nome": usuario.nome})
     return {"token": token}
+
+
+@app.get("/teste-simples")
+def teste():
+    return {"status": "A API está funcionando e o CORS permite isso!"}
