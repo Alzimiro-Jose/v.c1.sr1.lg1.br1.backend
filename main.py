@@ -20,11 +20,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 1200
 app = FastAPI()
 
 # ✅ AJUSTE CORS DEFINITIVO: Somente o domínio oficial da Vercel
+# No main.py, mude o allow_origins para aceitar TUDO temporariamente:
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://v-w1-c1-sr1-lg1-br1.vercel.app"
-    ],
+    allow_origins=["*"], # Aceita qualquer origem para teste
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
