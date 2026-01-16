@@ -34,20 +34,18 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-
-# 🔹 FORMATO OFICIAL PARA VERCEL (Supavisor Transaction Mode)
-# 🔹 O usuário DEVE conter o seu ID de projeto separado por um ponto
-# 🔹 A porta DEVE ser 6543
+# 🔹 Use a URL que funcionou no teste de terminal acima
 DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool, # Já está correto no seu código
+    poolclass=NullPool, # Essencial para Serverless
     connect_args={
         "connect_timeout": 30,
-        "prepare_threshold": None # Mantido conforme sua última versão
+        "prepare_threshold": None # Desativa prepared statements exigidos pelo Pooler
     }
 )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
