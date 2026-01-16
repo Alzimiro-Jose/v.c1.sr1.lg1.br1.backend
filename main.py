@@ -10,7 +10,10 @@ import jwt
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
+import socket
 from sqlalchemy.pool import NullPool # Importação necessária
+
+
 
 # --- CONFIGURAÇÕES DE SEGURANÇA ---
 SECRET_KEY = "Bento1801?"
@@ -31,18 +34,18 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
+# 🔹 Forçamos a resolução do IP para evitar o erro de 'Cannot assign requested address'
+original_host = "db.gbjpgklizrfocjecuolh.supabase.co"
+resolved_ip = socket.gethostbyname(original_host)
 
-
-# 🔹 URL OFICIAL do Pooler (Session Mode) do seu projeto
-# 🔹 O ID gbjpgklizrfocjecuolh identifica seu projeto (Tenant)
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+# 🔹 Usamos o IP direto com a porta 5432 (Conexão Direta)
+# 🔹 Isso simula exatamente o que deu 'AGORA FOI' no seu terminal
+DATABASE_URL = f"postgresql://postgres:4u5TNz6jnQCLMks0@{resolved_ip}:5432/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool, # Essencial para Vercel não travar no erro "Cannot assign address"
-    connect_args={
-        "connect_timeout": 30
-    }
+    poolclass=NullPool,
+    connect_args={"connect_timeout": 20}
 )
 
 
