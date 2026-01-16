@@ -38,16 +38,18 @@ app.add_middleware(
 original_host = "db.gbjpgklizrfocjecuolh.supabase.co"
 resolved_ip = socket.gethostbyname(original_host)
 
-# 🔹 Usamos o IP direto com a porta 5432 (Conexão Direta)
-# 🔹 Isso simula exatamente o que deu 'AGORA FOI' no seu terminal
-DATABASE_URL = f"postgresql://postgres:4u5TNz6jnQCLMks0@{resolved_ip}:5432/postgres?sslmode=require"
+# 🔹 A URL de ouro: Porta 6543 + Usuário com ID + pgbouncer=true
+# 🔹 O parâmetro pgbouncer=true é o que diz para a Vercel: "pode confiar nesta rota"
+DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
 
 engine = create_engine(
     DATABASE_URL,
     poolclass=NullPool,
-    connect_args={"connect_timeout": 20}
+    connect_args={
+        "connect_timeout": 30,
+        "application_name": "v_c1_backend"
+    }
 )
-
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
