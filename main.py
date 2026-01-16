@@ -34,14 +34,13 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# 🔹 REMOVA as linhas de 'socket' e 'resolved_ip' que estão quebrando a Vercel
-# 🔹 Use a URL com o ID do projeto no usuário e o parâmetro pgbouncer=true
-# 🔹 Este formato é o que o painel do Supabase sugere para ORMs na nuvem
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
+# 🔹 URL LIMPA: Sem pgbouncer (que deu erro) e sem socket (que quebra a Vercel)
+# 🔹 O formato 'postgres.id' no host 'pooler' é o padrão oficial para Vercel.
+DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool,
+    poolclass=NullPool, # Essencial para Vercel/Serverless
     connect_args={
         "connect_timeout": 30,
         "application_name": "v_c1_backend"
