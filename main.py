@@ -33,16 +33,15 @@ app.add_middleware(
 
 
 
-# 🔹 URL EXTRAÍDA DA ABA 'ORMs' DO SEU PAINEL SUPABASE
-# 🔹 O parâmetro pgbouncer=true resolve o conflito de 'Tenant not found' na Vercel
-# Use o usuário composto conforme indicado no Guia Prisma do Supabase
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
+# 🔹 URL OFICIAL do Pooler (Session Mode) do seu projeto
+# 🔹 O ID gbjpgklizrfocjecuolh identifica seu projeto (Tenant)
+DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool, # Essencial para Vercel não "pendurar" conexões
+    poolclass=NullPool, # Essencial para Vercel não travar no erro "Cannot assign address"
     connect_args={
-        "connect_timeout": 20
+        "connect_timeout": 30
     }
 )
 
