@@ -34,16 +34,16 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# 🔹 URL LIMPA: Sem pgbouncer (que deu erro) e sem socket (que quebra a Vercel)
-# 🔹 O formato 'postgres.id' no host 'pooler' é o padrão oficial para Vercel.
+# 🔹 REMOVA qualquer menção a 'socket' ou 'resolved_ip'
+# 🔹 Use a URL oficial do Pooler (Session/Transaction Mode)
+# 🔹 O ID gbjpgklizrfocjecuolh é essencial no nome do usuário
 DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool, # Essencial para Vercel/Serverless
+    poolclass=NullPool,  # Essencial para Vercel
     connect_args={
-        "connect_timeout": 30,
-        "application_name": "v_c1_backend"
+        "connect_timeout": 30
     }
 )
 
