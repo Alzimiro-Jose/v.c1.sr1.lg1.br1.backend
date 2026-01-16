@@ -34,17 +34,17 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# 🔹 Voltamos ao usuário 'postgres' puro
-# 🔹 Adicionamos o parâmetro 'options=-c project=gbjpgklizrfocjecuolh'
-# 🔹 Isso força o Pooler a identificar o seu projeto (Tenant)
-DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&options=-c%20project=gbjpgklizrfocjecuolh"
 
+# 🔹 A URL DEVE usar o formato postgres:// e a porta 6543
+# 🔹 O ID do projeto deve estar no host e o usuário deve ser 'postgres' puro
+DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool,  # Essencial para Vercel
+    poolclass=NullPool, # Essencial para Serverless/Vercel
     connect_args={
-        "connect_timeout": 30
+        "connect_timeout": 30,
+        "prepare_threshold": None # Desativa prepared statements (exigência do Pooler)
     }
 )
 
