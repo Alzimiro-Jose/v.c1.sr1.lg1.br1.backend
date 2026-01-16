@@ -34,10 +34,11 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# 🔹 REMOVA qualquer menção a 'socket' ou 'resolved_ip'
-# 🔹 Use a URL oficial do Pooler (Session/Transaction Mode)
-# 🔹 O ID gbjpgklizrfocjecuolh é essencial no nome do usuário
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+# 🔹 Voltamos ao usuário 'postgres' puro
+# 🔹 Adicionamos o parâmetro 'options=-c project=gbjpgklizrfocjecuolh'
+# 🔹 Isso força o Pooler a identificar o seu projeto (Tenant)
+DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&options=-c%20project=gbjpgklizrfocjecuolh"
+
 
 engine = create_engine(
     DATABASE_URL,

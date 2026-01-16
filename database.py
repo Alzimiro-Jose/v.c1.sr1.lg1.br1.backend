@@ -3,8 +3,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.pool import NullPool
 
-# 🔹 Use a mesma URL do main.py para evitar conflitos
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+# 🔹 Voltamos ao usuário 'postgres' puro
+# 🔹 Adicionamos o parâmetro 'options=-c project=gbjpgklizrfocjecuolh'
+# 🔹 Isso força o Pooler a identificar o seu projeto (Tenant)
+DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&options=-c%20project=gbjpgklizrfocjecuolh"
 
 engine = create_engine(DATABASE_URL, poolclass=NullPool)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
