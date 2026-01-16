@@ -34,12 +34,9 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# 🔹 Forçamos a resolução do IP para evitar o erro de 'Cannot assign requested address'
-original_host = "db.gbjpgklizrfocjecuolh.supabase.co"
-resolved_ip = socket.gethostbyname(original_host)
-
-# 🔹 A URL de ouro: Porta 6543 + Usuário com ID + pgbouncer=true
-# 🔹 O parâmetro pgbouncer=true é o que diz para a Vercel: "pode confiar nesta rota"
+# 🔹 REMOVA as linhas de 'socket' e 'resolved_ip' que estão quebrando a Vercel
+# 🔹 Use a URL com o ID do projeto no usuário e o parâmetro pgbouncer=true
+# 🔹 Este formato é o que o painel do Supabase sugere para ORMs na nuvem
 DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
 
 engine = create_engine(
