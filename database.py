@@ -3,15 +3,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.pool import NullPool
 
-# 🔹 Use a URL que funcionou no teste de terminal acima
-DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+
+DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@db.gbjpgklizrfocjecuolh.supabase.co:6543/postgres?sslmode=require"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool, # Essencial para Serverless
+    poolclass=NullPool, # Impede que a Vercel trave conexões
     connect_args={
         "connect_timeout": 30,
-        "prepare_threshold": None # Desativa prepared statements exigidos pelo Pooler
+        "prepare_threshold": None # OBRIGATÓRIO para Pooler Transaction Mode
     }
 )
 
