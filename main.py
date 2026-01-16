@@ -31,13 +31,16 @@ app.add_middleware(
 
 # --- CONFIGURAÇÃO DO BANCO DE DADOS ---
 
-# 🔹 FORMATO HÍBRIDO: Host do Pooler AWS + Usuário que funcionou no terminal
-# 🔹 Adicionamos ?sslmode=require para a Vercel aceitar a saída
-DATABASE_URL = "postgresql://postgres:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+
+
+# 🔹 URL EXTRAÍDA DA ABA 'ORMs' DO SEU PAINEL SUPABASE
+# 🔹 O parâmetro pgbouncer=true resolve o conflito de 'Tenant not found' na Vercel
+# Use o usuário composto conforme indicado no Guia Prisma do Supabase
+DATABASE_URL = "postgresql://postgres.gbjpgklizrfocjecuolh:4u5TNz6jnQCLMks0@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
 
 engine = create_engine(
     DATABASE_URL,
-    poolclass=NullPool, # Força a Vercel a agir como o seu terminal (abre e fecha na hora)
+    poolclass=NullPool, # Essencial para Vercel não "pendurar" conexões
     connect_args={
         "connect_timeout": 20
     }
